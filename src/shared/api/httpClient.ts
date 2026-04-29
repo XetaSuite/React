@@ -10,6 +10,7 @@ import { API_ENDPOINTS } from './urlBuilder';
 
 const httpClient: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_URL || '',
+    timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -22,10 +23,14 @@ const httpClient: AxiosInstance = axios.create({
 /**
  * Flag to control whether to show toast on server errors
  * Can be set per-request using config.meta.showErrorToast = false
+ * Set config.meta.redirectOnForbidden = true to keep legacy behavior
+ * (full-page redirect on 403). By default we only emit a toast so that a
+ * single failing background request doesn't kick the user out of the app.
  */
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
     meta?: {
         showErrorToast?: boolean;
+        redirectOnForbidden?: boolean;
     };
 }
 
@@ -64,9 +69,17 @@ httpClient.interceptors.response.use(
             return Promise.reject(error);
         }
 
-        // Handle 403 Forbidden - redirect to home page
+        // Handle 403 Forbidden:
+        // - Do NOT auto-redirect on background XHR (UX hostile + makes a single
+        //   failed poll log the user out). Just emit a toast.
+        // - Opt-in redirect via `meta.redirectOnForbidden = true` for explicit
+        //   navigation calls.
         if (error.response?.status === 403) {
-            window.location.href = '/';
+            if (config?.meta?.redirectOnForbidden) {
+                window.location.href = '/';
+            } else if (shouldShowToast) {
+                showError('You are not allowed to perform this action.');
+            }
             return Promise.reject(error);
         }
 

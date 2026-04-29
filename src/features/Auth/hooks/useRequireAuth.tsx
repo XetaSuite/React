@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from './useAuth';
+import { safeRedirectPath } from '@/shared/utils';
 import type { ReactNode } from 'react';
 
 interface RequireAuthProps {
@@ -64,7 +65,8 @@ export function RequireGuest({ children }: { children: ReactNode }) {
 
     if (isAuthenticated) {
         const from = location.state as { from?: { pathname: string; search?: string } } | null;
-        const redirectTo = from?.from ? `${from.from.pathname}${from.from.search || ''}` : '/';
+        const candidate = from?.from ? `${from.from.pathname}${from.from.search || ''}` : '/';
+        const redirectTo = safeRedirectPath(candidate, '/');
         return <Navigate to={redirectTo} replace />;
     }
 

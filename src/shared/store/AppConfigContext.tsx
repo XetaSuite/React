@@ -25,7 +25,6 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
                 const response = await httpClient.get<AppConfig>(API_ENDPOINTS.APP.CONFIG);
                 setConfig(response.data);
             } catch (error) {
-                console.error('Failed to fetch app config:', error);
                 // Set default values on error
                 setConfig({
                     demo_mode: false,

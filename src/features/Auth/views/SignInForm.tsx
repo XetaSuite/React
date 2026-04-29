@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useAuth } from '../hooks';
 import { useAppConfig } from '@/shared/store';
+import { safeRedirectPath } from '@/shared/utils';
 import Label from "@/shared/components/form/Label";
 import Input from "@/shared/components/form/input/InputField";
 import Checkbox from "@/shared/components/form/input/Checkbox";
@@ -38,7 +39,8 @@ export default function SignInForm() {
         try {
             await login({ email, password, remember });
             const from = location.state as { from?: { pathname: string; search?: string } } | null;
-            const redirectTo = from?.from ? `${from.from.pathname}${from.from.search || ''}` : '/';
+            const candidate = from?.from ? `${from.from.pathname}${from.from.search || ''}` : '/';
+            const redirectTo = safeRedirectPath(candidate, '/');
             navigate(redirectTo, { replace: true });
         } catch (err) {
             setError(err instanceof Error ? err.message : t('errors.generic'));

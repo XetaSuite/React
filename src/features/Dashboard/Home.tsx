@@ -49,7 +49,6 @@ export default function Home() {
       setChartsIncidentsData(chartsData.incidents_evolution);
       setChartsMaintenancesData(chartsData.maintenances_evolution);
     } catch (err) {
-      console.error('Failed to fetch dashboard data:', err);
       setError('Failed to load dashboard data');
     } finally {
       setIsLoading(false);
