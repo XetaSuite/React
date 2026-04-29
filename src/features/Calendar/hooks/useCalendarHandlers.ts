@@ -219,7 +219,7 @@ export function useCalendarEventHandlers(
                 window.location.href = `/incidents/${resourceId}`;
             }
         }
-    }, [setSelectedEvent, setSelectedDateInfo, setIsEventModalOpen]);
+    }, [setSelectedEvent, setSelectedDateInfo, setIsEventModalOpen, permissions.canUpdate, canViewMaintenance, canViewIncident]);
 
     /**
      * Handle event click from FullCalendar (EventClickArg)

@@ -15,8 +15,15 @@ export function safeRedirectPath(path: string | undefined | null, fallback: stri
         return fallback;
     }
 
-    // Reject anything containing a scheme separator or control characters.
-    if (/[\x00-\x1f]/.test(path) || /^\/+[a-z][a-z0-9+.-]*:/i.test(path)) {
+    // Reject any control character (0x00-0x1F) without relying on a control-char regex.
+    for (let i = 0; i < path.length; i++) {
+        if (path.charCodeAt(i) < 0x20) {
+            return fallback;
+        }
+    }
+
+    // Reject anything that smuggles a scheme after the leading slashes.
+    if (/^\/+[a-z][a-z0-9+.-]*:/i.test(path)) {
         return fallback;
     }
 

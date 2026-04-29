@@ -1,4 +1,4 @@
-import { useState, useEffect, type FC, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useEffect, useCallback, type FC, type ChangeEvent, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, Button, SearchableDropdown } from '@/shared/components/ui';
 import { Label, Input, Checkbox, TextArea } from '@/shared/components/form';
@@ -43,13 +43,6 @@ export const MaterialModal: FC<MaterialModalProps> = ({ isOpen, onClose, materia
 
     const isEditing = material !== null;
 
-    // Load options and material details when modal opens
-    useEffect(() => {
-        if (isOpen) {
-            loadOptionsAndMaterial();
-        }
-    }, [isOpen, material]);
-
     // Reset form when modal closes
     useEffect(() => {
         if (!isOpen) {
@@ -58,7 +51,7 @@ export const MaterialModal: FC<MaterialModalProps> = ({ isOpen, onClose, materia
         }
     }, [isOpen]);
 
-    const loadOptionsAndMaterial = async () => {
+    const loadOptionsAndMaterial = useCallback(async () => {
         setIsLoadingOptions(true);
 
         // Load zones, recipients, and material details in parallel
@@ -110,7 +103,14 @@ export const MaterialModal: FC<MaterialModalProps> = ({ isOpen, onClose, materia
         }
 
         setIsLoadingOptions(false);
-    };
+    }, [material]);
+
+    // Load options and material details when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            loadOptionsAndMaterial();
+        }
+    }, [isOpen, loadOptionsAndMaterial]);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;

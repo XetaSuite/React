@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type FC, type FormEvent } from 'react';
+import { useState, useEffect, useRef, useCallback, type FC, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown, FaCheck } from 'react-icons/fa6';
 import { Modal, Button, SearchableDropdown, type PinnedItem } from '@/shared/components/ui';
@@ -55,36 +55,7 @@ export const CleaningModal: FC<CleaningModalProps> = ({
 
     const isEditing = cleaning !== null;
 
-    // Load options when modal opens
-    useEffect(() => {
-        if (isOpen) {
-            loadOptions();
-        }
-    }, [isOpen, cleaning]);
-
-    // Reset form when modal closes
-    useEffect(() => {
-        if (!isOpen) {
-            setFormData(initialFormData);
-            setErrors({});
-            setIsTypeDropdownOpen(false);
-            setOriginalMaterial(null);
-        }
-    }, [isOpen]);
-
-    // Close type dropdown when clicking outside
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (typeDropdownRef.current && !typeDropdownRef.current.contains(event.target as Node)) {
-                setIsTypeDropdownOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const loadOptions = async () => {
+    const loadOptions = useCallback(async () => {
         setIsLoadingOptions(true);
 
         const [materialsResult, typeResult] = await Promise.all([
@@ -138,7 +109,36 @@ export const CleaningModal: FC<CleaningModalProps> = ({
         }
 
         setIsLoadingOptions(false);
-    };
+    }, [cleaning, preselectedMaterialId]);
+
+    // Load options when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            loadOptions();
+        }
+    }, [isOpen, loadOptions]);
+
+    // Reset form when modal closes
+    useEffect(() => {
+        if (!isOpen) {
+            setFormData(initialFormData);
+            setErrors({});
+            setIsTypeDropdownOpen(false);
+            setOriginalMaterial(null);
+        }
+    }, [isOpen]);
+
+    // Close type dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (typeDropdownRef.current && !typeDropdownRef.current.contains(event.target as Node)) {
+                setIsTypeDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const validate = (): boolean => {
         const newErrors: Record<string, string> = {};

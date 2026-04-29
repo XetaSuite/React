@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { FaArrowLeft, FaPenToSquare, FaMagnifyingGlass, FaLayerGroup, FaCalendar, FaWrench } from 'react-icons/fa6';
@@ -60,7 +60,7 @@ export function ZoneDetailPage() {
     }, [materials, materialsSearch]);
 
     // Load zone details
-    const loadZone = async () => {
+    const loadZone = useCallback(async () => {
         if (!id) return;
 
         setIsLoading(true);
@@ -75,10 +75,10 @@ export function ZoneDetailPage() {
         }
 
         setIsLoading(false);
-    };
+    }, [id, t]);
 
     // Load children zones
-    const loadChildren = async () => {
+    const loadChildren = useCallback(async () => {
         if (!id) return;
 
         setIsLoadingChildren(true);
@@ -89,10 +89,10 @@ export function ZoneDetailPage() {
         }
 
         setIsLoadingChildren(false);
-    };
+    }, [id]);
 
     // Load materials
-    const loadMaterials = async () => {
+    const loadMaterials = useCallback(async () => {
         if (!id) return;
 
         setIsLoadingMaterials(true);
@@ -103,12 +103,12 @@ export function ZoneDetailPage() {
         }
 
         setIsLoadingMaterials(false);
-    };
+    }, [id]);
 
     // Initial load
     useEffect(() => {
         loadZone();
-    }, [id]);
+    }, [loadZone]);
 
     // Load children or materials based on zone type
     useEffect(() => {
@@ -119,7 +119,7 @@ export function ZoneDetailPage() {
         } else if (zone.allow_material) {
             loadMaterials();
         }
-    }, [zone?.id, zone?.children_count, zone?.allow_material]);
+    }, [zone, loadChildren, loadMaterials]);
 
     // Handle zone update
     const handleZoneUpdated = async () => {

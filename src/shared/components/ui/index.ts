@@ -24,8 +24,9 @@ export type { SortableTableHeaderProps, StaticTableHeaderProps, SortDirection, T
 // Dropdown
 export { Dropdown } from "./dropdown/Dropdown";
 export { DropdownItem } from "./dropdown/DropdownItem";
-export { ActionsDropdown, createActions } from "./dropdown/ActionsDropdown";
+export { ActionsDropdown } from "./dropdown/ActionsDropdown";
 export type { ActionItem } from "./dropdown/ActionsDropdown";
+export { createActions } from "./dropdown/createActions";
 export { SearchableDropdown } from "./dropdown/SearchableDropdown";
 export type { DropdownOption, PinnedItem, SearchableDropdownProps } from "./dropdown/SearchableDropdown";
 export { MultiSelectDropdown } from "./dropdown/MultiSelectDropdown";

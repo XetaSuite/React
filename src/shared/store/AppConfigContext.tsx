@@ -1,15 +1,8 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import httpClient from '@/shared/api/httpClient';
 import { API_ENDPOINTS } from '@/shared/api/urlBuilder';
 import type { AppConfig } from '@/shared/types';
-
-interface AppConfigContextType {
-    config: AppConfig | null;
-    isLoading: boolean;
-    isDemoMode: boolean;
-}
-
-const AppConfigContext = createContext<AppConfigContextType | undefined>(undefined);
+import { AppConfigContext, type AppConfigContextType } from './appConfigContextInstance';
 
 interface AppConfigProviderProps {
     children: ReactNode;
@@ -49,14 +42,4 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
             {children}
         </AppConfigContext.Provider>
     );
-}
-
-export function useAppConfig(): AppConfigContextType {
-    const context = useContext(AppConfigContext);
-
-    if (context === undefined) {
-        throw new Error('useAppConfig must be used within an AppConfigProvider');
-    }
-
-    return context;
 }

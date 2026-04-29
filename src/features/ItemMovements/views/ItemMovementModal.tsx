@@ -133,7 +133,7 @@ export const ItemMovementModal: FC<ItemMovementModalProps> = ({
                     });
             }
         }
-    }, [isOpen, isEditMode, movementId, effectiveType, isEntry, itemId, itemCompanyId]);
+    }, [isOpen, isEditMode, movement, movementId, effectiveType, isEntry, itemId, itemCompanyId]);
 
     const handleChange = (
         field: keyof ItemMovementFormData,
