@@ -79,7 +79,6 @@ export interface ItemFilters {
 export interface CompanyMaintenance {
     id: number;
     description: string | null;
-    reason: string | null;
     type: string;
     type_label: string;
     realization: string;

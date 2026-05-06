@@ -47,9 +47,9 @@ const ZoneTreePage: FC = () => {
                 // Filter out the HQ site since zones cannot be created there
                 const nonHqSites = result.data.data.filter((s) => !s.is_headquarters);
                 setSites(nonHqSites);
-                // Auto-select first site if available
-                if (nonHqSites.length > 0 && !selectedSiteId) {
-                    setSelectedSiteId(nonHqSites[0].id);
+                // Auto-select first site if none selected yet (preserves user choice on re-runs)
+                if (nonHqSites.length > 0) {
+                    setSelectedSiteId((prev) => prev ?? nonHqSites[0].id);
                 }
             }
             setIsLoadingSites(false);

@@ -758,7 +758,6 @@
         "title": "Maintenances",
         "description": "Maintenance management",
         "maintenance": "Maintenance",
-        "reason": "Reason",
         "listTitle": "Maintenance list",
         "notFound": "Maintenance not found",
         "notFoundMessage": "The maintenance you are looking for does not exist or has been deleted.",
@@ -779,8 +778,6 @@
             "site": "Site",
             "description": "Description",
             "descriptionPlaceholder": "Maintenance description...",
-            "reason": "Reason",
-            "reasonPlaceholder": "Maintenance reason...",
             "type": "Type",
             "status": "Status",
             "realization": "Realization",
@@ -822,7 +819,7 @@
         "detail": {
             "info": "Information",
             "backToList": "Back to maintenances list",
-            "descriptionAndReason": "Description and Reason",
+            "description": "Description",
             "operators": "Operators",
             "companies": "Companies",
             "linkedIncidents": "Linked incidents",
@@ -873,8 +870,7 @@
             "currentStock": "Current stock",
             "itemPrice": "Price",
             "stockAvailable": "Available stock",
-            "descriptionPlaceholder": "Maintenance description...",
-            "reasonPlaceholder": "Maintenance reason..."
+            "descriptionPlaceholder": "Maintenance description..."
         },
         "errors": {
             "loadFailed": "Unable to load maintenance information",
@@ -1423,6 +1419,27 @@
             "notifications": "Notifications",
             "password": "Password",
             "security": "Security"
+        },
+        "tokens": {
+            "title": "Personal access tokens",
+            "description": "Used to authenticate API and MCP calls.",
+            "create": "Create a token",
+            "loading": "Loading…",
+            "empty": "No tokens created.",
+            "createdAt": "Created on {{date}}",
+            "expiresAt": "Expires on {{date}}",
+            "lastUsedAt": "Last used on {{date}}",
+            "revoke": "Revoke",
+            "revokeSuccess": "Token revoked.",
+            "createSuccess": "Token created successfully.",
+            "createdModalTitle": "Token created — copy it now",
+            "createdModalWarning": "This token will no longer be displayed after closing this window.",
+            "copy": "Copy",
+            "copied": "Copied to clipboard!",
+            "newTokenTitle": "New access token",
+            "tokenNameLabel": "Token name",
+            "tokenNamePlaceholder": "e.g.: MCP Claude",
+            "expiryDateLabel": "Expiration date (optional)"
         },
         "password": {
             "pageTitle": "Change my password",

@@ -120,7 +120,6 @@ export interface MaterialIncident {
 export interface MaterialMaintenance {
     id: number;
     description: string;
-    reason: string;
     type: string;
     type_label: string;
     status: string;

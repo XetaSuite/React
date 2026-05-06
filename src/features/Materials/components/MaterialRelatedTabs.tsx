@@ -327,7 +327,7 @@ export function MaterialRelatedTabs({ material }: MaterialRelatedTabsProps) {
                                                         <LinkedName
                                                             canView={canViewMaintenance}
                                                             id={maintenance.id}
-                                                            name={`#${maintenance.id} - ${maintenance.reason}`}
+                                                            name={`#${maintenance.id} - ${maintenance.description}`}
                                                             basePath="maintenances"
                                                         />
                                                     </TableCell>

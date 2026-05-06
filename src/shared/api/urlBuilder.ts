@@ -140,6 +140,11 @@ export const API_ENDPOINTS = {
         MAINTENANCES: (id: number) => `/api/v1/companies/${id}/maintenances`,
         STATS: (id: number) => `/api/v1/companies/${id}/stats`,
     },
+    // Personal Access Tokens
+    TOKENS: {
+        BASE: '/api/v1/tokens',
+        DETAIL: (id: number) => `/api/v1/tokens/${id}`,
+    },
     // Users
     USERS: {
         BASE: '/api/v1/users',

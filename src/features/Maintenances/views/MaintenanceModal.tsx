@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type FC, type FormEvent } from 'react';
+import { useState, useEffect, useRef, useCallback, type FC, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown, FaCheck, FaPlus, FaTrash, FaMinus } from 'react-icons/fa6';
 import { Modal, Button, SearchableDropdown, type PinnedItem } from '@/shared/components/ui';
@@ -33,7 +33,6 @@ interface MaintenanceModalProps {
 const initialFormData: MaintenanceFormData = {
     material_id: null,
     description: '',
-    reason: '',
     type: 'corrective',
     realization: 'internal',
     status: 'planned',
@@ -109,13 +108,6 @@ export const MaintenanceModal: FC<MaintenanceModalProps> = ({
     const itemsDropdownRef = useRef<HTMLDivElement>(null);
 
     const isEditing = maintenance !== null;
-
-    // Load options when modal opens
-    useEffect(() => {
-        if (isOpen) {
-            loadOptions();
-        }
-    }, [isOpen, maintenance]);
 
     // Reset form when modal closes
     useEffect(() => {
@@ -200,7 +192,7 @@ export const MaintenanceModal: FC<MaintenanceModalProps> = ({
         return () => clearTimeout(timer);
     }, [itemSearch]);
 
-    const loadOptions = async () => {
+    const loadOptions = useCallback(async () => {
         setIsLoadingOptions(true);
 
         const [
@@ -256,7 +248,6 @@ export const MaintenanceModal: FC<MaintenanceModalProps> = ({
                 setFormData({
                     material_id: detail.material_id || null,
                     description: detail.description,
-                    reason: detail.reason,
                     type: detail.type,
                     realization: detail.realization,
                     status: detail.status,
@@ -319,7 +310,14 @@ export const MaintenanceModal: FC<MaintenanceModalProps> = ({
         }
 
         setIsLoadingOptions(false);
-    };
+    }, [maintenance, preselectedMaterialId]);
+
+    // Load options when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            loadOptions();
+        }
+    }, [isOpen, loadOptions]);
 
     const searchIncidents = async (search: string) => {
         const result = await MaintenanceManager.getAvailableIncidents(search);
@@ -354,10 +352,6 @@ export const MaintenanceModal: FC<MaintenanceModalProps> = ({
 
         if (!formData.description.trim()) {
             newErrors.description = t('validation.required');
-        }
-
-        if (!formData.reason.trim()) {
-            newErrors.reason = t('validation.required');
         }
 
         // Validate operators required for internal/both realization
@@ -1045,26 +1039,6 @@ export const MaintenanceModal: FC<MaintenanceModalProps> = ({
                             }}
                             error={!!errors.description}
                             hint={errors.description}
-                        />
-                    </div>
-
-                    {/* Reason */}
-                    <div>
-                        <Label htmlFor="reason">{t('maintenances.reason')} *</Label>
-                        <TextArea
-                            id="reason"
-                            name="reason"
-                            rows={3}
-                            placeholder={t('maintenances.form.reasonPlaceholder')}
-                            value={formData.reason}
-                            onChange={(value) => {
-                                setFormData(prev => ({ ...prev, reason: value }));
-                                if (errors.reason) {
-                                    setErrors(prev => ({ ...prev, reason: '' }));
-                                }
-                            }}
-                            error={!!errors.reason}
-                            hint={errors.reason}
                         />
                     </div>
                 </div>

@@ -48,8 +48,7 @@ export default function Home() {
       const chartsData = await DashboardRepository.getChartsData();
       setChartsIncidentsData(chartsData.incidents_evolution);
       setChartsMaintenancesData(chartsData.maintenances_evolution);
-    } catch (err) {
-      console.error('Failed to fetch dashboard data:', err);
+    } catch {
       setError('Failed to load dashboard data');
     } finally {
       setIsLoading(false);
@@ -134,7 +133,7 @@ export default function Home() {
       stock_status: item.stock_status,
       stock_status_color: item.stock_status_color,
     }));
-  }, [dashboardData?.low_stock_items, t]);
+  }, [dashboardData?.low_stock_items]);
 
   const incidentsSummary: IncidentsSummary = useMemo(() => {
     if (!dashboardData?.incidents_summary) {

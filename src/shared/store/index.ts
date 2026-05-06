@@ -1,1 +1,2 @@
-export { AppConfigProvider, useAppConfig } from './AppConfigContext';
+export { AppConfigProvider } from './AppConfigContext';
+export { useAppConfig } from './useAppConfig';

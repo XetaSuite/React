@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
@@ -56,7 +56,7 @@ export function MaterialDetailPage() {
     const canViewZone = hasPermission('zone.view');
 
     // Load material details
-    const loadMaterial = async () => {
+    const loadMaterial = useCallback(async () => {
         if (!id) return;
 
         setIsLoading(true);
@@ -71,12 +71,12 @@ export function MaterialDetailPage() {
         }
 
         setIsLoading(false);
-    };
+    }, [id, t]);
 
     // Initial load
     useEffect(() => {
         loadMaterial();
-    }, [id]);
+    }, [loadMaterial]);
 
     // Handle material update
     const handleMaterialUpdated = async () => {

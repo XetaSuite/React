@@ -2,6 +2,7 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { FaShieldHalved } from "react-icons/fa6";
 import { PageMeta } from "@/shared/components/common";
+import ApiKeysSection from "@/features/Tokens/components/ApiKeysSection";
 
 const SecurityPage: FC = () => {
     const { t } = useTranslation();
@@ -28,19 +29,9 @@ const SecurityPage: FC = () => {
                     </div>
                 </div>
 
-                {/* Content - Coming Soon */}
+                {/* Content */}
                 <div className="p-4 sm:p-6">
-                    <div className="flex flex-col items-center justify-center py-16 text-center">
-                        <div className="text-6xl mb-4">
-                            <FaShieldHalved className="text-gray-500 dark:text-gray-400" />
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-2">
-                            {t("common.comingSoon")}
-                        </h3>
-                        <p className="text-gray-500 dark:text-gray-400 max-w-md">
-                            {t("account.security.comingSoonDescription")}
-                        </p>
-                    </div>
+                    <ApiKeysSection />
                 </div>
             </div>
         </>

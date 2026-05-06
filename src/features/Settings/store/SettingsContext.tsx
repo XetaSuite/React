@@ -1,21 +1,9 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, type ReactNode } from 'react';
 import type { AppSettings } from '../types';
 import { DEFAULT_SETTINGS } from '../types';
 import { SettingsManager } from '../services';
 import { useAuth } from '@/features/Auth/hooks';
-
-interface SettingsContextValue {
-    settings: AppSettings;
-    isLoading: boolean;
-    error: string | null;
-    refreshSettings: () => Promise<void>;
-    getCurrency: () => string;
-    getCurrencySymbol: () => string;
-    formatPrice: (amount: number) => string;
-    isLoginEnabled: () => boolean;
-}
-
-const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
+import { SettingsContext, type SettingsContextValue } from './settingsContextInstance';
 
 interface SettingsProviderProps {
     children: ReactNode;
@@ -97,14 +85,4 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
             {children}
         </SettingsContext.Provider>
     );
-}
-
-export function useSettings(): SettingsContextValue {
-    const context = useContext(SettingsContext);
-
-    if (context === undefined) {
-        throw new Error('useSettings must be used within a SettingsProvider');
-    }
-
-    return context;
 }

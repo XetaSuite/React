@@ -1,11 +1,10 @@
-import { createContext, useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { User } from '@/shared/types';
 import type { LoginCredentials, ForgotPasswordData, ResetPasswordData } from '../types';
 import type { AuthContextType } from './types';
 import { AuthManager } from '../services';
-
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext } from './authContextInstance';
 
 interface AuthProviderProps {
     children: ReactNode;

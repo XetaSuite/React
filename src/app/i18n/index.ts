@@ -16,7 +16,7 @@ i18n
         fallbackLng: 'en',
         interpolation: { escapeValue: false },
         detection: {
-            order: ['cookie', 'localStorage', 'navigator'],
+            order: ['cookie', 'navigator'],
             caches: ['cookie'],
             cookieOptions: { path: '/', sameSite: 'strict' }
         }

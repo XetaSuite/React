@@ -71,13 +71,6 @@ export const IncidentModal: FC<IncidentModalProps> = ({
 
     const isEditing = incident !== null;
 
-    // Load options when modal opens
-    useEffect(() => {
-        if (isOpen) {
-            loadOptions();
-        }
-    }, [isOpen, incident]);
-
     // Reset form when modal closes
     useEffect(() => {
         if (!isOpen) {
@@ -105,6 +98,15 @@ export const IncidentModal: FC<IncidentModalProps> = ({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    const loadMaintenances = useCallback(async (materialId: number) => {
+        setIsLoadingMaintenances(true);
+        const result = await IncidentManager.getAvailableMaintenances(materialId);
+        if (result.success && result.data) {
+            setAvailableMaintenances(result.data);
+        }
+        setIsLoadingMaintenances(false);
+    }, []);
+
     // Load maintenances when material changes
     useEffect(() => {
         if (formData.material_id > 0) {
@@ -113,9 +115,9 @@ export const IncidentModal: FC<IncidentModalProps> = ({
             setAvailableMaintenances([]);
             setFormData((prev) => ({ ...prev, maintenance_id: null }));
         }
-    }, [formData.material_id]);
+    }, [formData.material_id, loadMaintenances]);
 
-    const loadOptions = async () => {
+    const loadOptions = useCallback(async () => {
         setIsLoadingOptions(true);
 
         const [materialsResult, severityResult, statusResult] = await Promise.all([
@@ -193,16 +195,14 @@ export const IncidentModal: FC<IncidentModalProps> = ({
         }
 
         setIsLoadingOptions(false);
-    };
+    }, [incident, preselectedMaterialId, loadMaintenances]);
 
-    const loadMaintenances = async (materialId: number) => {
-        setIsLoadingMaintenances(true);
-        const result = await IncidentManager.getAvailableMaintenances(materialId);
-        if (result.success && result.data) {
-            setAvailableMaintenances(result.data);
+    // Load options when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            loadOptions();
         }
-        setIsLoadingMaintenances(false);
-    };
+    }, [isOpen, loadOptions]);
 
     // Search maintenances via API (searches across all maintenances of the site)
     const searchMaintenances = useCallback(async (search: string) => {

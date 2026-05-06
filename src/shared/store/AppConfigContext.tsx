@@ -1,15 +1,8 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import httpClient from '@/shared/api/httpClient';
 import { API_ENDPOINTS } from '@/shared/api/urlBuilder';
 import type { AppConfig } from '@/shared/types';
-
-interface AppConfigContextType {
-    config: AppConfig | null;
-    isLoading: boolean;
-    isDemoMode: boolean;
-}
-
-const AppConfigContext = createContext<AppConfigContextType | undefined>(undefined);
+import { AppConfigContext, type AppConfigContextType } from './appConfigContextInstance';
 
 interface AppConfigProviderProps {
     children: ReactNode;
@@ -24,8 +17,7 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
             try {
                 const response = await httpClient.get<AppConfig>(API_ENDPOINTS.APP.CONFIG);
                 setConfig(response.data);
-            } catch (error) {
-                console.error('Failed to fetch app config:', error);
+            } catch {
                 // Set default values on error
                 setConfig({
                     demo_mode: false,
@@ -50,14 +42,4 @@ export function AppConfigProvider({ children }: AppConfigProviderProps) {
             {children}
         </AppConfigContext.Provider>
     );
-}
-
-export function useAppConfig(): AppConfigContextType {
-    const context = useContext(AppConfigContext);
-
-    if (context === undefined) {
-        throw new Error('useAppConfig must be used within an AppConfigProvider');
-    }
-
-    return context;
 }

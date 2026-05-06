@@ -1,10 +1,12 @@
 // Shared Hooks
 export { useModal } from "./useModal";
 export { default as useGoBack } from "./useGoBack";
-export { useSidebar, SidebarProvider } from "./useSidebar";
+export { useSidebar } from "./useSidebar";
 export type { SidebarContextType } from "./useSidebar";
-export { useTheme, ThemeProvider } from "./useTheme";
+export { SidebarProvider } from "./SidebarProvider";
+export { useTheme } from "./useTheme";
 export type { ThemeContextType } from "./useTheme";
+export { ThemeProvider } from "./ThemeProvider";
 export { useRecaptcha } from "./useRecaptcha";
 export { useListPage } from "./useListPage";
 export type { UseListPageOptions, UseListPageReturn } from "./useListPage";

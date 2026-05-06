@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
-import { SidebarProvider, useSidebar } from "@/shared/hooks/useSidebar";
+import { SidebarProvider } from "@/shared/hooks/SidebarProvider";
+import { useSidebar } from "@/shared/hooks/useSidebar";
 import { AppHeader } from "@/shared/components/header/AppHeader";
 import { AppSidebar, Backdrop } from "@/shared/components/sidebar";
 

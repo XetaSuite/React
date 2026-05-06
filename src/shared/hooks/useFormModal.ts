@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, type ChangeEvent, type FormEvent } from "react";
+import { useState, useEffect, useCallback, useRef, type ChangeEvent, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { showSuccess, showError } from "@/shared/utils";
 import type { ManagerResult, SingleResponse } from "@/shared/types";
@@ -115,28 +115,44 @@ export function useFormModal<TEntity extends { id?: number; name?: string }, TFo
 
     const isEditing = entity !== null;
 
+    // Keep latest references in refs so the init effect can read them
+    // without re-running every time the parent passes new function/object identities.
+    const initialFormDataRef = useRef(initialFormData);
+    const entityToFormDataRef = useRef(entityToFormData);
+    const onFormInitRef = useRef(onFormInit);
+
+    useEffect(() => {
+        initialFormDataRef.current = initialFormData;
+        entityToFormDataRef.current = entityToFormData;
+        onFormInitRef.current = onFormInit;
+    });
+
     // Initialize form when modal opens or entity changes
     useEffect(() => {
         if (isOpen) {
-            if (entity && entityToFormData) {
-                setFormData(entityToFormData(entity));
+            const baseInitial = initialFormDataRef.current;
+            const toFormData = entityToFormDataRef.current;
+
+            if (entity && toFormData) {
+                setFormData(toFormData(entity));
             } else if (entity) {
                 // Default: copy matching properties from entity
-                const newFormData = { ...initialFormData };
-                for (const key of Object.keys(initialFormData as object)) {
+                const newFormData = { ...baseInitial };
+                for (const key of Object.keys(baseInitial as object)) {
                     if (key in entity) {
-                        (newFormData as Record<string, unknown>)[key] = (entity as Record<string, unknown>)[key] ?? initialFormData[key as keyof TFormData];
+                        (newFormData as Record<string, unknown>)[key] = (entity as Record<string, unknown>)[key] ?? baseInitial[key as keyof TFormData];
                     }
                 }
                 setFormData(newFormData);
             } else {
-                setFormData(initialFormData);
+                setFormData(baseInitial);
             }
             setErrors({});
 
             // Trigger form initialization callback
-            if (onFormInit) {
-                onFormInit();
+            const initCallback = onFormInitRef.current;
+            if (initCallback) {
+                initCallback();
             }
         }
     }, [isOpen, entity]);

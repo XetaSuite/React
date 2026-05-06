@@ -1,7 +1,21 @@
-import { useState, useEffect, useCallback, useRef, type FC } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef, type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { FaDownload, FaPrint, FaSpinner } from "react-icons/fa6";
+import DOMPurify from "dompurify";
 import { Modal, Button } from "@/shared/components/ui";
+import { escapeHtml } from "@/shared/utils";
+
+/**
+ * Sanitize SVG markup coming from the API before injecting it into the DOM.
+ * Allows the SVG profile but strips <script>, event handlers and external refs.
+ */
+const sanitizeSvg = (svg: string): string =>
+    DOMPurify.sanitize(svg, {
+        USE_PROFILES: { svg: true, svgFilters: true },
+        ADD_TAGS: ["svg"],
+        FORBID_TAGS: ["script", "foreignObject"],
+        FORBID_ATTR: ["onload", "onerror", "onclick"],
+    });
 
 /**
  * Entity interface for QR code modal
@@ -54,6 +68,8 @@ export const QrCodeModal: FC<QrCodeModalProps> = ({
     const [error, setError] = useState<string | null>(null);
     const qrContainerRef = useRef<HTMLDivElement>(null);
 
+    const sanitizedSvg = useMemo(() => (svgContent ? sanitizeSvg(svgContent) : ""), [svgContent]);
+
     const sizeOptions: { value: string; label: string }[] = [
         { value: "100", label: "100 x 100 px" },
         { value: "150", label: "150 x 150 px" },
@@ -70,7 +86,7 @@ export const QrCodeModal: FC<QrCodeModalProps> = ({
 
         const result = await fetchQrCode(entity.id, size);
         if (result.success && result.data) {
-            setSvgContent(result.data.svg);
+            setSvgContent(sanitizeSvg(result.data.svg));
         } else {
             setError(result.error || t("errors.generic"));
         }
@@ -108,70 +124,58 @@ export const QrCodeModal: FC<QrCodeModalProps> = ({
     const handlePrint = () => {
         if (!svgContent || !entity) return;
 
-        // Create a new window for printing
-        const printWindow = window.open("", "_blank");
-        if (!printWindow) return;
+        // Build the print document via a sandboxed Blob URL so the print window
+        // does not share an opener context with the SPA, and escape any
+        // user-controlled values to prevent HTML injection / XSS.
+        const safeName = escapeHtml(entity.name);
+        const safeReference = entity.reference ? escapeHtml(entity.reference) : "";
+        const safeTitle = escapeHtml(
+            t(`${translationPrefix}.qrCode.printTitle`, { name: entity.name }) as string
+        );
+        const safeSvg = sanitizeSvg(svgContent);
 
-        printWindow.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>${t(`${translationPrefix}.qrCode.printTitle`, { name: entity.name })}</title>
-                <style>
-                    body {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        min-height: 100vh;
-                        margin: 0;
-                        padding: 20px;
-                        font-family: system-ui, -apple-system, sans-serif;
-                    }
-                    .entity-info {
-                        text-align: center;
-                        margin-bottom: 20px;
-                    }
-                    .entity-name {
-                        font-size: 18px;
-                        font-weight: bold;
-                        margin-bottom: 5px;
-                    }
-                    .entity-reference {
-                        font-size: 14px;
-                        color: #666;
-                    }
-                    .qr-container {
-                        display: flex;
-                        justify-content: center;
-                    }
-                    @media print {
-                        body {
-                            padding: 0;
-                        }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="entity-info">
-                    <div class="entity-name">${entity.name}</div>
-                    ${entity.reference ? `<div class="entity-reference">${entity.reference}</div>` : ""}
-                </div>
-                <div class="qr-container">
-                    ${svgContent}
-                </div>
-            </body>
-            </html>
-        `);
+        const html = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>${safeTitle}</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .entity-info { text-align: center; margin-bottom: 20px; }
+        .entity-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+        .entity-reference { font-size: 14px; color: #666; }
+        .qr-container { display: flex; justify-content: center; }
+        @media print { body { padding: 0; } }
+    </style>
+</head>
+<body>
+    <div class="entity-info">
+        <div class="entity-name">${safeName}</div>
+        ${safeReference ? `<div class="entity-reference">${safeReference}</div>` : ""}
+    </div>
+    <div class="qr-container">${safeSvg}</div>
+    <script>window.addEventListener('load', function () { window.print(); });</script>
+</body>
+</html>`;
 
-        printWindow.document.close();
-        printWindow.focus();
-
-        // Wait for content to load then print
-        setTimeout(() => {
-            printWindow.print();
-            printWindow.close();
-        }, 250);
+        const blob = new Blob([html], { type: "text/html" });
+        const blobUrl = URL.createObjectURL(blob);
+        const printWindow = window.open(blobUrl, "_blank", "noopener,noreferrer");
+        if (!printWindow) {
+            URL.revokeObjectURL(blobUrl);
+            return;
+        }
+        // Free the Blob URL after the new window has had time to load.
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
     };
 
     if (!entity) return null;
@@ -242,7 +246,7 @@ export const QrCodeModal: FC<QrCodeModalProps> = ({
                             </div>
                         ) : (
                             <div
-                                dangerouslySetInnerHTML={{ __html: svgContent }}
+                                dangerouslySetInnerHTML={{ __html: sanitizedSvg }}
                                 className="qr-code-container"
                             />
                         )}
