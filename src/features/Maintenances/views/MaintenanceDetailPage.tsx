@@ -470,11 +470,11 @@ export function MaintenanceDetailPage() {
                     </div>
                 </div>
 
-                {/* Description & Reason */}
+                {/* Description */}
                 <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-white/5 dark:bg-white/3">
                     <h3 className="mb-4 flex items-center gap-2 text-lg font-medium text-gray-900 dark:text-white">
                         <FaCircleInfo className="h-4 w-4" />
-                        {t('maintenances.detail.descriptionAndReason')}
+                        {t('maintenances.detail.description')}
                     </h3>
 
                     <div className="space-y-4">
@@ -486,18 +486,6 @@ export function MaintenanceDetailPage() {
                             <div className="rounded-lg bg-gray-50 p-4 dark:bg-neutral-800/50">
                                 <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
                                     {maintenance.description || <span className="text-gray-400">—</span>}
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Reason */}
-                        <div>
-                            <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {t('maintenances.fields.reason')}
-                            </p>
-                            <div className="rounded-lg bg-gray-50 p-4 dark:bg-neutral-800/50">
-                                <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
-                                    {maintenance.reason || <span className="text-gray-400">—</span>}
                                 </p>
                             </div>
                         </div>

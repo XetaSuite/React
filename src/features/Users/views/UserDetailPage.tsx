@@ -516,7 +516,7 @@ const UserDetailPage: FC = () => {
                                                             <LinkedName
                                                                 canView={canViewMaintenance}
                                                                 id={maintenance.id}
-                                                                name={`#${maintenance.id} - ${maintenance.reason}`}
+                                                                name={`#${maintenance.id} - ${maintenance.description}`}
                                                                 basePath="maintenances" />
                                                         </TableCell>
                                                         <TableCell className="px-6 py-4 text-gray-600 dark:text-gray-300">

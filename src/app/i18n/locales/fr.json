@@ -749,7 +749,6 @@
         "title": "Maintenances",
         "description": "Gestion des maintenances",
         "maintenance": "Maintenance",
-        "reason": "Raison",
         "listTitle": "Liste des maintenances",
         "notFound": "Maintenance introuvable",
         "notFoundMessage": "La maintenance que vous recherchez n'existe pas ou a été supprimée.",
@@ -770,8 +769,6 @@
             "site": "Site",
             "description": "Description",
             "descriptionPlaceholder": "Description de la maintenance...",
-            "reason": "Raison",
-            "reasonPlaceholder": "Raison de la maintenance...",
             "type": "Type",
             "status": "Statut",
             "realization": "Réalisation",
@@ -813,7 +810,7 @@
         "detail": {
             "info": "Informations",
             "backToList": "Retour à la liste des maintenances",
-            "descriptionAndReason": "Description et Raison",
+            "description": "Description",
             "operators": "Opérateurs",
             "companies": "Entreprises",
             "linkedIncidents": "Incidents liés",
@@ -864,8 +861,7 @@
             "currentStock": "Stock actuel",
             "itemPrice": "Prix",
             "stockAvailable": "Stock disponible",
-            "descriptionPlaceholder": "Description de la maintenance...",
-            "reasonPlaceholder": "Raison de la maintenance..."
+            "descriptionPlaceholder": "Description de la maintenance..."
         },
         "errors": {
             "loadFailed": "Impossible de charger les informations de maintenance",

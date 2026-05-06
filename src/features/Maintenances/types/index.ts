@@ -6,7 +6,6 @@ export type MaintenanceRealization = 'internal' | 'external' | 'both';
 export interface Maintenance {
     id: number;
     description: string;
-    reason: string;
     // Status and type
     status: MaintenanceStatus;
     status_label: string;
@@ -110,7 +109,6 @@ export interface MaintenanceSite {
 export interface MaintenanceFormData {
     material_id?: number | null;
     description: string;
-    reason: string;
     type: MaintenanceType;
     realization: MaintenanceRealization;
     status?: MaintenanceStatus;

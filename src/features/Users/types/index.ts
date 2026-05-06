@@ -121,7 +121,6 @@ export interface UserCleaning {
 export interface UserMaintenance {
     id: number;
     description: string;
-    reason: string;
     type: string;
     status: string;
     material?: {

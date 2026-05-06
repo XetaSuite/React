@@ -758,7 +758,6 @@
         "title": "Maintenances",
         "description": "Maintenance management",
         "maintenance": "Maintenance",
-        "reason": "Reason",
         "listTitle": "Maintenance list",
         "notFound": "Maintenance not found",
         "notFoundMessage": "The maintenance you are looking for does not exist or has been deleted.",
@@ -779,8 +778,6 @@
             "site": "Site",
             "description": "Description",
             "descriptionPlaceholder": "Maintenance description...",
-            "reason": "Reason",
-            "reasonPlaceholder": "Maintenance reason...",
             "type": "Type",
             "status": "Status",
             "realization": "Realization",
@@ -822,7 +819,7 @@
         "detail": {
             "info": "Information",
             "backToList": "Back to maintenances list",
-            "descriptionAndReason": "Description and Reason",
+            "description": "Description",
             "operators": "Operators",
             "companies": "Companies",
             "linkedIncidents": "Linked incidents",
@@ -873,8 +870,7 @@
             "currentStock": "Current stock",
             "itemPrice": "Price",
             "stockAvailable": "Available stock",
-            "descriptionPlaceholder": "Maintenance description...",
-            "reasonPlaceholder": "Maintenance reason..."
+            "descriptionPlaceholder": "Maintenance description..."
         },
         "errors": {
             "loadFailed": "Unable to load maintenance information",
